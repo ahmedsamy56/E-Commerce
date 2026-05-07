@@ -8,12 +8,12 @@ public class Order {
     private Integer userId;
     private LocalDateTime date;
     private BigDecimal totalPrice;
-    private Integer status;
+    private OrderStatus status;
 
     public Order() {
     }
 
-    public Order(Integer id, Integer userId, LocalDateTime date, BigDecimal totalPrice, Integer status) {
+    public Order(Integer id, Integer userId, LocalDateTime date, BigDecimal totalPrice, OrderStatus status) {
         this.id = id;
         this.userId = userId;
         this.date = date;
@@ -53,11 +53,11 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Integer getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 }
