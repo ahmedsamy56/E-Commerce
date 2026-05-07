@@ -135,4 +135,22 @@ public class ReviewRepository extends BaseRepository implements IReviewRepositor
         }
         return reviews;
     }
+
+    @Override
+    public Review findByUserIdAndProductId(int userId, int productId) {
+        try {
+            String sql = "SELECT * FROM Reviews WHERE user_id = ? AND product_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToReview(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -1,8 +1,10 @@
 package org.example.ecommerce.Servlets;
 
+import Application.Services.AuthService;
 import Application.Services.CategoryService;
 import Core.Entities.Category;
 import Infrastructure.Repositories.CategoryRepository;
+import Infrastructure.Repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,12 +20,14 @@ import java.util.List;
 public class CategoryServlet extends HttpServlet {
 
     private CategoryService categoryService;
+    private AuthService authService;
     private ObjectMapper objectMapper;
     private ResponseHandler responseHandler;
 
     @Override
     public void init() throws ServletException {
         categoryService = new CategoryService(new CategoryRepository());
+        authService = new AuthService(new UserRepository());
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         responseHandler = new ResponseHandler();
@@ -49,6 +53,10 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!authService.isAdmin(req)) {
+            responseHandler.send(resp, responseHandler.unauthorized("Admin role required"));
+            return;
+        }
         Category category = objectMapper.readValue(req.getReader(), Category.class);
         categoryService.add(category);
         responseHandler.send(resp, responseHandler.created(category));
@@ -56,6 +64,10 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!authService.isAdmin(req)) {
+            responseHandler.send(resp, responseHandler.unauthorized("Admin role required"));
+            return;
+        }
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
             responseHandler.send(resp, responseHandler.badRequest("Category ID is required for update"));
@@ -72,6 +84,10 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!authService.isAdmin(req)) {
+            responseHandler.send(resp, responseHandler.unauthorized("Admin role required"));
+            return;
+        }
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
             responseHandler.send(resp, responseHandler.badRequest("Category ID is required for deletion"));

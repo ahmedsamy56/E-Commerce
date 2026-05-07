@@ -1,8 +1,10 @@
 package org.example.ecommerce.Servlets;
 
+import Application.Services.AuthService;
 import Application.Services.ProductService;
 import Core.Entities.Product;
 import Infrastructure.Repositories.ProductRepository;
+import Infrastructure.Repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,12 +20,14 @@ import java.util.List;
 public class ProductServlet extends HttpServlet {
 
     private ProductService productService;
+    private AuthService authService;
     private ObjectMapper objectMapper;
     private ResponseHandler responseHandler;
 
     @Override
     public void init() throws ServletException {
         productService = new ProductService(new ProductRepository());
+        authService = new AuthService(new UserRepository());
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         responseHandler = new ResponseHandler();
@@ -56,6 +60,10 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!authService.isAdmin(req)) {
+            responseHandler.send(resp, responseHandler.unauthorized("Admin role required"));
+            return;
+        }
         Product product = objectMapper.readValue(req.getReader(), Product.class);
         productService.add(product);
         responseHandler.send(resp, responseHandler.created(product));
@@ -63,6 +71,10 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!authService.isAdmin(req)) {
+            responseHandler.send(resp, responseHandler.unauthorized("Admin role required"));
+            return;
+        }
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
             responseHandler.send(resp, responseHandler.badRequest("Product ID is required for update"));
@@ -79,6 +91,10 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!authService.isAdmin(req)) {
+            responseHandler.send(resp, responseHandler.unauthorized("Admin role required"));
+            return;
+        }
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
             responseHandler.send(resp, responseHandler.badRequest("Product ID is required for deletion"));
