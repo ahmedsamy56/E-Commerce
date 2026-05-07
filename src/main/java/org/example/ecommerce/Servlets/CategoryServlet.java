@@ -25,40 +25,33 @@ public class CategoryServlet extends HttpServlet {
     public void init() throws ServletException {
         categoryService = new CategoryService(new CategoryRepository());
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         responseHandler = new ResponseHandler();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        
+
         if (pathInfo == null || pathInfo.equals("/")) {
             List<Category> categories = categoryService.getAll();
             responseHandler.send(resp, responseHandler.success(categories));
         } else {
-            try {
-                int id = Integer.parseInt(pathInfo.substring(1));
-                Category category = categoryService.getById(id);
-                if (category == null) {
-                    responseHandler.send(resp, responseHandler.notFound("Category not found"));
-                } else {
-                    responseHandler.send(resp, responseHandler.success(category));
-                }
-            } catch (NumberFormatException e) {
-                responseHandler.send(resp, responseHandler.badRequest("Invalid ID format"));
+            int id = Integer.parseInt(pathInfo.substring(1));
+            Category category = categoryService.getById(id);
+            if (category == null) {
+                responseHandler.send(resp, responseHandler.notFound("Category not found"));
+            } else {
+                responseHandler.send(resp, responseHandler.success(category));
             }
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Category category = objectMapper.readValue(req.getReader(), Category.class);
-            categoryService.add(category);
-            responseHandler.send(resp, responseHandler.created(category));
-        } catch (IllegalArgumentException e) {
-            responseHandler.send(resp, responseHandler.badRequest(e.getMessage()));
-        }
+        Category category = objectMapper.readValue(req.getReader(), Category.class);
+        categoryService.add(category);
+        responseHandler.send(resp, responseHandler.created(category));
     }
 
     @Override
@@ -69,18 +62,12 @@ public class CategoryServlet extends HttpServlet {
             return;
         }
 
-        try {
-            int id = Integer.parseInt(pathInfo.substring(1));
-            Category category = objectMapper.readValue(req.getReader(), Category.class);
-            category.setId(id);
-            categoryService.update(category);
-            
-            responseHandler.send(resp, responseHandler.success(category));
-        } catch (NumberFormatException e) {
-            responseHandler.send(resp, responseHandler.badRequest("Invalid ID format"));
-        } catch (IllegalArgumentException e) {
-            responseHandler.send(resp, responseHandler.badRequest(e.getMessage()));
-        }
+        int id = Integer.parseInt(pathInfo.substring(1));
+        Category category = objectMapper.readValue(req.getReader(), Category.class);
+        category.setId(id);
+        categoryService.update(category);
+
+        responseHandler.send(resp, responseHandler.success(category));
     }
 
     @Override
@@ -91,13 +78,9 @@ public class CategoryServlet extends HttpServlet {
             return;
         }
 
-        try {
-            int id = Integer.parseInt(pathInfo.substring(1));
-            categoryService.delete(id);
-            responseHandler.send(resp, responseHandler.deleted());
-        } catch (NumberFormatException e) {
-            responseHandler.send(resp, responseHandler.badRequest("Invalid ID format"));
-        }
+        int id = Integer.parseInt(pathInfo.substring(1));
+        categoryService.delete(id);
+        responseHandler.send(resp, responseHandler.deleted());
     }
 
 }

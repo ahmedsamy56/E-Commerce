@@ -10,6 +10,7 @@ public class ResponseHandler {
 
     public ResponseHandler() {
         this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     }
 
     public void send(HttpServletResponse resp, Response<?> response) throws IOException {

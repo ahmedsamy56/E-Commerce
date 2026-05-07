@@ -25,52 +25,40 @@ public class ProductServlet extends HttpServlet {
     public void init() throws ServletException {
         productService = new ProductService(new ProductRepository());
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         responseHandler = new ResponseHandler();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        
+
         if (pathInfo == null || pathInfo.equals("/")) {
-            // Check if there is a categoryId query parameter for filtering
             String categoryIdParam = req.getParameter("categoryId");
             if (categoryIdParam != null && !categoryIdParam.isEmpty()) {
-                try {
-                    int categoryId = Integer.parseInt(categoryIdParam);
-                    List<Product> products = productService.getByCategoryId(categoryId);
-                    responseHandler.send(resp, responseHandler.success(products));
-                } catch (NumberFormatException e) {
-                    responseHandler.send(resp, responseHandler.badRequest("Invalid categoryId format"));
-                }
+                int categoryId = Integer.parseInt(categoryIdParam);
+                List<Product> products = productService.getByCategoryId(categoryId);
+                responseHandler.send(resp, responseHandler.success(products));
             } else {
                 List<Product> products = productService.getAll();
                 responseHandler.send(resp, responseHandler.success(products));
             }
         } else {
-            try {
-                int id = Integer.parseInt(pathInfo.substring(1));
-                Product product = productService.getById(id);
-                if (product == null) {
-                    responseHandler.send(resp, responseHandler.notFound("Product not found"));
-                } else {
-                    responseHandler.send(resp, responseHandler.success(product));
-                }
-            } catch (NumberFormatException e) {
-                responseHandler.send(resp, responseHandler.badRequest("Invalid ID format"));
+            int id = Integer.parseInt(pathInfo.substring(1));
+            Product product = productService.getById(id);
+            if (product == null) {
+                responseHandler.send(resp, responseHandler.notFound("Product not found"));
+            } else {
+                responseHandler.send(resp, responseHandler.success(product));
             }
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Product product = objectMapper.readValue(req.getReader(), Product.class);
-            productService.add(product);
-            responseHandler.send(resp, responseHandler.created(product));
-        } catch (IllegalArgumentException e) {
-            responseHandler.send(resp, responseHandler.badRequest(e.getMessage()));
-        }
+        Product product = objectMapper.readValue(req.getReader(), Product.class);
+        productService.add(product);
+        responseHandler.send(resp, responseHandler.created(product));
     }
 
     @Override
@@ -81,18 +69,12 @@ public class ProductServlet extends HttpServlet {
             return;
         }
 
-        try {
-            int id = Integer.parseInt(pathInfo.substring(1));
-            Product product = objectMapper.readValue(req.getReader(), Product.class);
-            product.setId(id);
-            productService.update(product);
-            
-            responseHandler.send(resp, responseHandler.success(product));
-        } catch (NumberFormatException e) {
-            responseHandler.send(resp, responseHandler.badRequest("Invalid ID format"));
-        } catch (IllegalArgumentException e) {
-            responseHandler.send(resp, responseHandler.badRequest(e.getMessage()));
-        }
+        int id = Integer.parseInt(pathInfo.substring(1));
+        Product product = objectMapper.readValue(req.getReader(), Product.class);
+        product.setId(id);
+        productService.update(product);
+
+        responseHandler.send(resp, responseHandler.success(product));
     }
 
     @Override
@@ -103,12 +85,8 @@ public class ProductServlet extends HttpServlet {
             return;
         }
 
-        try {
-            int id = Integer.parseInt(pathInfo.substring(1));
-            productService.delete(id);
-            responseHandler.send(resp, responseHandler.deleted());
-        } catch (NumberFormatException e) {
-            responseHandler.send(resp, responseHandler.badRequest("Invalid ID format"));
-        }
+        int id = Integer.parseInt(pathInfo.substring(1));
+        productService.delete(id);
+        responseHandler.send(resp, responseHandler.deleted());
     }
 }

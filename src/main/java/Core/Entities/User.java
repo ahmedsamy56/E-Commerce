@@ -8,19 +8,19 @@ public class User {
     private String email;
     private String phone;
     private String password;
-    private Integer roleId;
+    private Role role;
     private LocalDateTime createdAt;
 
     public User() {
     }
 
-    public User(Integer id, String name, String email, String phone, String password, Integer roleId, LocalDateTime createdAt) {
+    public User(Integer id, String name, String email, String phone, String password, Role role, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.password = password;
-        this.roleId = roleId;
+        this.role = role;
         this.createdAt = createdAt;
     }
 
@@ -64,12 +64,12 @@ public class User {
         this.password = password;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {

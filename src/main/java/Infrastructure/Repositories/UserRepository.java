@@ -1,5 +1,6 @@
 package Infrastructure.Repositories;
 
+import Core.Entities.Role;
 import Core.Entities.User;
 import Core.Interfaces.Repositories.IUserRepository;
 import java.sql.*;
@@ -7,6 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository extends BaseRepository implements IUserRepository {
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        user.setPhone(rs.getString("phone"));
+        user.setPassword(rs.getString("password"));
+        
+        int roleValue = rs.getInt("role");
+        user.setRole(Role.values()[roleValue]);
+        
+        Timestamp ts = rs.getTimestamp("created_at");
+        if (ts != null) {
+            user.setCreatedAt(ts.toLocalDateTime());
+        }
+        return user;
+    }
 
     @Override
     public User findById(int id) {
@@ -18,11 +37,7 @@ public class UserRepository extends BaseRepository implements IUserRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                return user;
+                return mapResultSetToUser(rs);
             }
 
         } catch (SQLException e) {
@@ -41,11 +56,7 @@ public class UserRepository extends BaseRepository implements IUserRepository {
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                users.add(user);
+                users.add(mapResultSetToUser(rs));
             }
 
         } catch (SQLException e) {
@@ -58,11 +69,14 @@ public class UserRepository extends BaseRepository implements IUserRepository {
     @Override
     public void Add(User user) {
         try {
-            String sql = "INSERT INTO users(name, email) VALUES (?, ?)";
+            String sql = "INSERT INTO users(name, email, phone, password, role) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPhone());
+            stmt.setString(4, user.getPassword());
+            stmt.setInt(5, user.getRole().ordinal());
 
             stmt.executeUpdate();
 
@@ -74,12 +88,15 @@ public class UserRepository extends BaseRepository implements IUserRepository {
     @Override
     public void update(User user) {
         try {
-            String sql = "UPDATE users SET name=?, email=? WHERE id=?";
+            String sql = "UPDATE users SET name=?, email=?, phone=?, password=?, role=? WHERE id=?";
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
-            stmt.setInt(3, user.getId());
+            stmt.setString(3, user.getPhone());
+            stmt.setString(4, user.getPassword());
+            stmt.setInt(5, user.getRole().ordinal());
+            stmt.setInt(6, user.getId());
 
             stmt.executeUpdate();
 
@@ -112,11 +129,7 @@ public class UserRepository extends BaseRepository implements IUserRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                return user;
+                return mapResultSetToUser(rs);
             }
 
         } catch (SQLException e) {

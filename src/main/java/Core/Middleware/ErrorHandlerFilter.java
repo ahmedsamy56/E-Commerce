@@ -11,7 +11,8 @@ import java.io.IOException;
 @WebFilter("/*")
 public class ErrorHandlerFilter implements Filter {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
