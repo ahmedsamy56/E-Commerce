@@ -25,9 +25,15 @@ jobs:
 
       - name: Build images with Docker Compose
         run: docker compose -f docker-compose.yml build
+        env:
+          DOCKER_REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}/
+          IMAGE_TAG: latest
 
       - name: List Docker Images
         run: docker images
       
       - name: Push images to Docker Hub
-        run: docker compose -f docker-compose.yml push
+        run: docker compose -f docker-compose.yml push backend
+        env:
+          DOCKER_REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}/
+          IMAGE_TAG: latest
