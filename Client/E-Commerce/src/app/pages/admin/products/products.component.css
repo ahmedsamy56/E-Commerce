@@ -1,0 +1,25 @@
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.02);
+}
+
+.badge {
+    font-weight: 600;
+}
+
+.btn-white {
+    background-color: white;
+    border: 1px solid #dee2e6;
+}
+
+.btn-white:hover {
+    background-color: #f8f9fa;
+}
+
+.input-group-text {
+    border-right: none;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}

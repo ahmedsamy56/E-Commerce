@@ -24,4 +24,16 @@ export class ProductService {
   getProductById(id: number): Observable<ApiResponse<Product>> {
     return this.http.get<ApiResponse<Product>>(`${this.apiUrl}/products/${id}`);
   }
+
+  addProduct(product: any): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/products`, product);
+  }
+
+  updateProduct(id: number, product: any): Observable<ApiResponse<void>> {
+    return this.http.put<ApiResponse<void>>(`${this.apiUrl}/products/${id}`, product);
+  }
+
+  deleteProduct(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/products/${id}`);
+  }
 }

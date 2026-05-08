@@ -5,4 +5,5 @@ export interface AuthResponse {
     username?: string;
     email: string;
     phone: string;
+    role: number;
 }

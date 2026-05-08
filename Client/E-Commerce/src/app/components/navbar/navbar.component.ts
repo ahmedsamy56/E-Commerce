@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   userName: string = '';
   cartItemCount: number = 0;
   isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -35,6 +36,7 @@ export class NavbarComponent implements OnInit {
     if (user) {
       this.userName = user.name || user.username || 'User';
       this.isLoggedIn = true;
+      this.isAdmin = this.userService.isAdmin();
     }
   }
 

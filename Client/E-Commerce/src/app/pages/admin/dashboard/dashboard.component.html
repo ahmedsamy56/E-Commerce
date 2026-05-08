@@ -1,0 +1,71 @@
+<div class="dashboard-header mb-5">
+    <h2 class="fw-bold mb-1">Dashboard Overview</h2>
+    <p class="text-muted">Monitor your store's performance and key metrics.</p>
+</div>
+
+@if (isLoading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+} @else if (errorMessage) {
+    <div class="alert alert-danger border-0 shadow-sm rounded-4 p-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+    </div>
+} @else if (stats) {
+    <div class="row g-4 mb-5">
+        <!-- Products Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card p-4 bg-white rounded-4 shadow-sm border-0 d-flex align-items-center">
+                <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-4 me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-box-seam fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-muted small fw-bold text-uppercase mb-1">Total Products</p>
+                    <h3 class="mb-0 fw-bold">{{ stats.total_products }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card p-4 bg-white rounded-4 shadow-sm border-0 d-flex align-items-center">
+                <div class="icon-box bg-success bg-opacity-10 text-success rounded-4 me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-tags fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-muted small fw-bold text-uppercase mb-1">Total Categories</p>
+                    <h3 class="mb-0 fw-bold">{{ stats.total_categories }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card p-4 bg-white rounded-4 shadow-sm border-0 d-flex align-items-center">
+                <div class="icon-box bg-info bg-opacity-10 text-info rounded-4 me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-cart-check fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-muted small fw-bold text-uppercase mb-1">Total Orders</p>
+                    <h3 class="mb-0 fw-bold">{{ stats.total_orders }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card p-4 bg-white rounded-4 shadow-sm border-0 d-flex align-items-center">
+                <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-4 me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-star fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-muted small fw-bold text-uppercase mb-1">Total Reviews</p>
+                    <h3 class="mb-0 fw-bold">{{ stats.total_reviews }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}

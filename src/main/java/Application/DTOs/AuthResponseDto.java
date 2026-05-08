@@ -6,16 +6,18 @@ public class AuthResponseDto {
     private String name;
     private String email;
     private String phone;
+    private Integer role;
 
     public AuthResponseDto() {
     }
 
-    public AuthResponseDto(Integer id, String token, String name, String email, String phone) {
+    public AuthResponseDto(Integer id, String token, String name, String email, String phone, Integer role) {
         this.id = id;
         this.token = token;
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.role = role;
     }
 
     public Integer getId() {
@@ -56,5 +58,13 @@ public class AuthResponseDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
     }
 }

@@ -7,7 +7,11 @@ import { CartComponent } from './pages/cart/cart.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { OrderDetailsComponent } from './pages/order-details/order-details.component';
+import { AdminLayoutComponent } from './pages/admin/admin-layout/admin-layout.component';
+import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
+import { AdminProductsComponent } from './pages/admin/products/products.component';
 import { authGuard } from './Core/guards/auth.guard';
+import { adminGuard } from './Core/guards/admin.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +22,21 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'my-orders', component: OrdersComponent, canActivate: [authGuard] },
   { path: 'order-details/:id', component: OrderDetailsComponent, canActivate: [authGuard] },
+  
+  // Admin Routes
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [authGuard, adminGuard],
+    children: [
+      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'products', component: AdminProductsComponent },
+      { path: 'categories', component: AdminDashboardComponent }, // Placeholder
+      { path: 'orders', component: AdminDashboardComponent }, // Placeholder
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
+
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }
 ];

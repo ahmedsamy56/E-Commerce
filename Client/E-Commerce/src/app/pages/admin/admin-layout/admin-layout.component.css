@@ -1,0 +1,37 @@
+.admin-container {
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-link {
+    color: #adb5bd;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.nav-link:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+    color: white;
+    background: var(--bs-primary);
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+.main-content {
+    overflow-y: auto;
+}
+
+.tracking-tight {
+    letter-spacing: -0.5px;
+}

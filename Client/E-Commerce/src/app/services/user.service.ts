@@ -46,6 +46,15 @@ export class UserService {
     return user ? user.id : null;
   }
 
+  getUserRole(): number | null {
+    const user = this.getUser();
+    return user ? user.role : null;
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 1;
+  }
+
   deleteAccount(): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/auth/delete-account`, {});
   }
