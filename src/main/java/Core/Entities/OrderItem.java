@@ -8,7 +8,7 @@ public class OrderItem {
     private Integer productId;
     private Integer quantity;
     private BigDecimal price;
-
+    
     public OrderItem() {
     }
 

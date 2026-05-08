@@ -1,0 +1,120 @@
+<app-navbar></app-navbar>
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- User Info Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="bg-primary p-4 text-center">
+                    <div class="user-avatar bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" 
+                         style="width: 100px; height: 100px; font-size: 3rem;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-0 text-white">
+                        {{ (user?.name || user?.username) ? (user?.name || user?.username) : 'User Profile' }}
+                    </h4>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <p class="text-muted mb-3">{{ user?.email }}</p>
+                    <div class="badge bg-light text-primary border border-primary-subtle px-3 py-2 rounded-pill mb-4">
+                        User ID: #{{ user?.id }}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-danger rounded-pill" (click)="deleteAccount()" [disabled]="isDeletingAccount">
+                            @if (isDeletingAccount) {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            } @else {
+                                <i class="bi bi-trash me-2"></i>
+                            }
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="col-lg-8">
+            <!-- Edit Review Section (Conditional) -->
+            @if (editingReview) {
+                <div id="edit-review-form" class="card border-0 shadow-sm rounded-4 mb-4 border-start border-4 border-primary">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0">Edit Your Review</h5>
+                            <button class="btn-close" (click)="cancelEdit()"></button>
+                        </div>
+
+                        @if (updateMessage) {
+                            <div class="alert" [class.alert-success]="updateMessage.includes('successfully')" [class.alert-danger]="!updateMessage.includes('successfully')">
+                                {{ updateMessage }}
+                            </div>
+                        }
+
+                        <form (ngSubmit)="updateReview()">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Rating</label>
+                                <div class="rating-input d-flex gap-2">
+                                    @for (star of [1,2,3,4,5]; track star) {
+                                        <i class="bi fs-4 cursor-pointer" 
+                                           [class]="star <= editModel.rating ? 'bi-star-fill text-warning' : 'bi-star text-muted'"
+                                           (click)="editModel.rating = star"></i>
+                                    }
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="comment" class="form-label fw-semibold">Your Comment</label>
+                                <textarea id="comment" class="form-control rounded-3" rows="3" [(ngModel)]="editModel.comment" name="comment" required></textarea>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary px-4 rounded-pill" [disabled]="isUpdating">
+                                    @if (isUpdating) {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                    }
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-light px-4 rounded-pill" (click)="cancelEdit()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+
+            <!-- Reviews List -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="fw-bold mb-0">My Reviews ({{ reviews.length }})</h5>
+                </div>
+                <div class="card-body p-4 pt-0">
+                    @if (isLoadingReviews) {
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2 text-muted">Fetching your reviews...</p>
+                        </div>
+                    } @else {
+                        <div class="row g-4">
+                            @for (review of reviews; track review.id) {
+                                <div class="col-12">
+                                    <app-review-item 
+                                        [review]="review" 
+                                        [currentUserId]="user?.id || null"
+                                        [showProductLink]="true"
+                                        (edit)="onEditReview($event)"
+                                        (delete)="deleteReview($event)">
+                                    </app-review-item>
+                                </div>
+                            } @empty {
+                                <div class="col-12 text-center py-5">
+                                    <div class="display-1 text-light mb-3">
+                                        <i class="bi bi-chat-dots"></i>
+                                    </div>
+                                    <h5 class="text-muted">You haven't written any reviews yet.</h5>
+                                    <a routerLink="/home" class="btn btn-primary mt-3 rounded-pill px-4">Start Shopping</a>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

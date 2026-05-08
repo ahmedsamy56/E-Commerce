@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
 import { CartItem, ShippingInfo, OrderRequest } from '../../models/cart.model';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterModule, FormsModule],
+  imports: [CommonModule, RouterLink, RouterModule, FormsModule, NavbarComponent],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })

@@ -8,11 +8,13 @@ import { UserService } from '../../services/user.service';
 import { CartService } from '../../services/cart.service';
 import { Product } from '../../models/product.model';
 import { Review } from '../../models/review.model';
+import { ReviewItemComponent } from '../../components/review-item/review-item.component';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ReviewItemComponent, NavbarComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
@@ -65,7 +67,7 @@ export class ProductDetailsComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         console.error(err);
-        this.errorMessage = 'An error occurred while fetching product details.';
+        this.errorMessage = err.error?.message || 'An error occurred while fetching product details.';
       }
     });
   }
@@ -81,7 +83,7 @@ export class ProductDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.isLoadingReviews = false;
-        console.error('Failed to load reviews', err);
+        this.errorMessage = err.error?.message || 'An error occurred while fetching product details.';
       }
     });
   }
@@ -157,7 +159,6 @@ export class ProductDetailsComponent implements OnInit {
   addToCart() {
     if (this.product) {
       this.cartService.addToCart(this.product, this.selectedQuantity);
-      alert(`${this.product.name} added to cart!`);
       this.selectedQuantity = 1;
     }
   }

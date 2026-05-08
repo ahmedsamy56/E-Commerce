@@ -46,6 +46,10 @@ export class UserService {
     return user ? user.id : null;
   }
 
+  deleteAccount(): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/auth/delete-account`, {});
+  }
+
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');

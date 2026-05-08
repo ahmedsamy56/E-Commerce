@@ -1,6 +1,5 @@
 package Application.DTOs;
 
-import Core.Entities.OrderItem;
 import Core.Entities.Shipment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,11 +16,11 @@ public class OrderDetailDto {
 
     private String status;
 
-    private List<OrderItem> items;
+    private List<OrderItemDetailDto> items;
     private Shipment shipping;
 
     public OrderDetailDto(Integer id, LocalDateTime date, BigDecimal totalPrice, String status,
-                          List<OrderItem> items, Shipment shipping) {
+                          List<OrderItemDetailDto> items, Shipment shipping) {
         this.id = id;
         this.date = date;
         this.totalPrice = totalPrice;
@@ -34,6 +33,6 @@ public class OrderDetailDto {
     public LocalDateTime getDate() { return date; }
     public BigDecimal getTotalPrice() { return totalPrice; }
     public String getStatus() { return status; }
-    public List<OrderItem> getItems() { return items; }
+    public List<OrderItemDetailDto> getItems() { return items; }
     public Shipment getShipping() { return shipping; }
 }

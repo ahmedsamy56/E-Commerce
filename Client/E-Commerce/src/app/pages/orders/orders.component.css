@@ -1,0 +1,28 @@
+.table thead th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    border-bottom: none;
+}
+
+.table tbody td {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-color: #f8f9fa;
+}
+
+.card {
+    transition: transform 0.3s ease;
+}
+
+.badge {
+    font-weight: 500;
+}
+
+.bg-warning-subtle { background-color: #fff3cd !important; color: #856404 !important; }
+.bg-info-subtle { background-color: #cff4fc !important; color: #055160 !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; color: #0f5132 !important; }
+.bg-danger-subtle { background-color: #f8d7da !important; color: #842029 !important; }
+.bg-secondary-subtle { background-color: #e2e3e5 !important; color: #41464b !important; }

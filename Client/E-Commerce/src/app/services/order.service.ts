@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { ApiResponse } from '../models/api-response.model';
 import { OrderRequest } from '../models/cart.model';
+import { Order, OrderDetail } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +16,13 @@ export class OrderService {
 
   placeOrder(order: OrderRequest): Observable<ApiResponse<string>> {
     return this.http.post<ApiResponse<string>>(`${this.apiUrl}/orders`, order);
+  }
+
+  getMyOrders(): Observable<ApiResponse<Order[]>> {
+    return this.http.get<ApiResponse<Order[]>>(`${this.apiUrl}/orders/my`);
+  }
+
+  getOrderById(id: number): Observable<ApiResponse<OrderDetail>> {
+    return this.http.get<ApiResponse<OrderDetail>>(`${this.apiUrl}/orders/${id}`);
   }
 }

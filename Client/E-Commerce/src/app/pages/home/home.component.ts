@@ -6,13 +6,12 @@ import { CategoryService } from '../../services/category.service';
 import { Product } from '../../models/product.model';
 import { Category } from '../../models/category.model';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
-import { UserService } from '../../services/user.service';
-import { CartService } from '../../services/cart.service';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductCardComponent],
+  imports: [CommonModule, ProductCardComponent, NavbarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -22,27 +21,15 @@ export class HomeComponent implements OnInit {
   selectedCategoryId: number | null = null;
   errorMessage: string = '';
   isLoading: boolean = false;
-  userName: string = '';
-  cartItemCount: number = 0;
 
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService,
-    private userService: UserService,
-    private cartService: CartService
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
-    const user = this.userService.getUser();
-    if (user) {
-      this.userName = user.name;
-    }
     this.fetchCategories();
     this.fetchProducts();
-
-    this.cartService.cart$.subscribe(() => {
-      this.cartItemCount = this.cartService.getItemCount();
-    });
   }
 
   fetchCategories() {
@@ -78,9 +65,5 @@ export class HomeComponent implements OnInit {
   onCategorySelect(categoryId: number | null) {
     this.selectedCategoryId = categoryId;
     this.fetchProducts();
-  }
-
-  logout() {
-    this.userService.logout();
   }
 }

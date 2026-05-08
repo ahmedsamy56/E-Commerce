@@ -2,6 +2,7 @@ package Application.Services;
 
 import Application.DTOs.CreateOrderDto;
 import Application.DTOs.OrderDetailDto;
+import Application.DTOs.OrderItemDetailDto;
 import Application.DTOs.OrderItemDto;
 import Application.DTOs.OrderSummaryDto;
 import Application.DTOs.ShippingDto;
@@ -19,6 +20,7 @@ import Core.Interfaces.Services.IOrderService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderService implements IOrderService {
 
@@ -117,6 +119,17 @@ public class OrderService implements IOrderService {
         }
 
         List<Core.Entities.OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        List<OrderItemDetailDto> itemDetailDtos = items.stream().map(item -> {
+            Product product = productRepository.findById(item.getProductId());
+            return new OrderItemDetailDto(
+                    item.getId(),
+                    item.getProductId(),
+                    item.getQuantity(),
+                    item.getPrice(),
+                    product
+            );
+        }).collect(Collectors.toList());
+
         Core.Entities.Shipment shipment = shipmentRepository.findByOrderId(orderId);
 
         return new OrderDetailDto(
@@ -124,7 +137,7 @@ public class OrderService implements IOrderService {
                 order.getDate(),
                 order.getTotalPrice(),
                 order.getStatus().name(),
-                items,
+                itemDetailDtos,
                 shipment
         );
     }
