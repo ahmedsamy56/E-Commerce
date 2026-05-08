@@ -1,0 +1,30 @@
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.product-image {
+    height: 200px;
+    object-fit: cover;
+    background-color: #f8f9fa;
+}
+
+.description-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 3rem;
+}
+
+.badge {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -1,6 +1,7 @@
 package Application.DTOs;
 
 public class AuthResponseDto {
+    private Integer id;
     private String token;
     private String name;
     private String email;
@@ -9,11 +10,20 @@ public class AuthResponseDto {
     public AuthResponseDto() {
     }
 
-    public AuthResponseDto(String token, String name, String email, String phone) {
+    public AuthResponseDto(Integer id, String token, String name, String email, String phone) {
+        this.id = id;
         this.token = token;
         this.name = name;
         this.email = email;
         this.phone = phone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getToken() {

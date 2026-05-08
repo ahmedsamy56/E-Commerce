@@ -30,7 +30,7 @@ public class AuthService implements IAuthService {
         }
 
         String token = jwtUtil.generateToken(user);
-        return new AuthResponseDto(token, user.getName(), user.getEmail(), user.getPhone());
+        return new AuthResponseDto(user.getId(), token, user.getName(), user.getEmail(), user.getPhone());
     }
 
     @Override

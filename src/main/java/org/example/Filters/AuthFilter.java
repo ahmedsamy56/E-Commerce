@@ -12,6 +12,7 @@ import java.io.IOException;
 @WebFilter("/api/*")
 public class AuthFilter implements Filter {
 
+    private static final String ALLOWED_ORIGIN = "http://localhost:4200";
     private JwtUtil jwtUtil;
     private ResponseHandler responseHandler;
 
@@ -27,6 +28,12 @@ public class AuthFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
+        setCorsHeaders(res);
+
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+            res.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
 
         String path = req.getRequestURI();
 
@@ -57,5 +64,12 @@ public class AuthFilter implements Filter {
 
     @Override
     public void destroy() {
+    }
+
+    private void setCorsHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+        response.setHeader("Vary", "Origin");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
     }
 }

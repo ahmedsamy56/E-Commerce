@@ -1,0 +1,212 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" routerLink="/home">E-Shop</a>
+        <div class="ms-auto">
+            <button class="btn btn-outline-primary btn-sm rounded-pill px-3" routerLink="/home">
+                <i class="bi bi-arrow-left me-1"></i> Back to Products
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 mb-5">
+    @if (isLoading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Loading product details...</p>
+    </div>
+    } @else if (errorMessage) {
+    <div class="alert alert-danger border-0 shadow-sm rounded-3" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+    </div>
+    } @else if (product) {
+    <div class="row g-5">
+        <div class="col-md-6">
+            <div class="product-image-container rounded-4 overflow-hidden shadow-sm bg-white p-3">
+                <img [src]="product.imageUrl" class="img-fluid rounded-3" [alt]="product.name">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="ps-md-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small text-muted mb-3">
+                        <li class="breadcrumb-item"><a routerLink="/home" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Details</li>
+                    </ol>
+                </nav>
+
+                <h1 class="fw-bold mb-3 display-5">{{ product.name }}</h1>
+
+                <div class="d-flex align-items-center mb-4">
+                    <h2 class="text-primary fw-bold mb-0 me-3">${{ product.price }}</h2>
+                    <span class="badge"
+                        [class]="product.stock > 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+                        {{ product.stock > 0 ? 'In Stock (' + product.stock + ')' : 'Out of Stock' }}
+                    </span>
+                </div>
+
+                <p class="text-muted fs-5 mb-5 leading-relaxed">
+                    {{ product.description }}
+                </p>
+
+                <div class="action-buttons d-flex flex-column gap-3 mt-auto">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="input-group" style="max-width: 150px;">
+                            <button class="btn btn-outline-secondary" type="button" (click)="selectedQuantity = selectedQuantity > 1 ? selectedQuantity - 1 : 1">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="number" class="form-control text-center border-secondary" [(ngModel)]="selectedQuantity" min="1" [max]="product.stock">
+                            <button class="btn btn-outline-secondary" type="button" (click)="selectedQuantity = selectedQuantity < product.stock ? selectedQuantity + 1 : product.stock">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                        <span class="text-muted small">Max: {{ product.stock }}</span>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg rounded-pill px-5 flex-grow-1 py-3 fw-bold"
+                        [disabled]="product.stock === 0" (click)="addToCart()">
+                        <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                    </button>
+                </div>
+
+                <div class="mt-5 pt-4 border-top">
+                    <div class="row g-4">
+                        <div class="col-6 col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="feature-icon bg-light rounded-3 p-2 me-3">
+                                    <i class="bi bi-truck text-primary fs-4"></i>
+                                </div>
+                                <span class="small fw-medium">Free Delivery</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="feature-icon bg-light rounded-3 p-2 me-3">
+                                    <i class="bi bi-shield-check text-primary fs-4"></i>
+                                </div>
+                                <span class="small fw-medium">1 Year Warranty</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Review Form Section -->
+        <div class="mt-5 pt-5 border-top">
+            <h3 class="fw-bold mb-4">{{ editingReviewId ? 'Update Your Review' : 'Write a Review' }}</h3>
+            
+            @if (reviewErrorMessage) {
+                <div class="alert alert-danger border-0 shadow-sm rounded-3 mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ reviewErrorMessage }}
+                </div>
+            }
+
+            @if (reviewSuccessMessage) {
+                <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ reviewSuccessMessage }}
+                </div>
+            }
+
+            <form (ngSubmit)="submitReview()" class="bg-white p-4 rounded-4 shadow-sm">
+                <div class="mb-3">
+                    <label class="form-label fw-medium">Your Rating</label>
+                    <div class="rating-input d-flex gap-2">
+                        @for (star of [1,2,3,4,5]; track star) {
+                            <i class="bi fs-4 cursor-pointer" 
+                               [class]="star <= newReview.rating ? 'bi-star-fill text-warning' : 'bi-star text-muted'"
+                               (click)="newReview.rating = star"></i>
+                        }
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-medium">Your Comment</label>
+                    <textarea class="form-control rounded-3 border-light-subtle" 
+                              rows="3" 
+                              placeholder="Share your experience with this product..."
+                              name="comment"
+                              [(ngModel)]="newReview.comment"
+                              required
+                              [disabled]="isSubmittingReview"></textarea>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" 
+                            class="btn btn-primary rounded-pill px-5 py-2 fw-bold"
+                            [disabled]="isSubmittingReview || !newReview.comment">
+                        @if (isSubmittingReview) {
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        }
+                        {{ editingReviewId ? 'Update Review' : 'Submit Review' }}
+                    </button>
+                    @if (editingReviewId) {
+                        <button type="button" class="btn btn-light rounded-pill px-4 py-2 fw-bold" (click)="cancelEdit()">
+                            Cancel
+                        </button>
+                    }
+                </div>
+            </form>
+        </div>
+
+        <!-- Reviews List Section -->
+        <div class="mt-5 pt-4">
+            <h3 class="fw-bold mb-4">Customer Reviews</h3>
+            
+            @if (isLoadingReviews) {
+                <div class="text-center py-4">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                    <p class="small text-muted mt-2">Loading reviews...</p>
+                </div>
+            } @else {
+                <div class="row g-4">
+                    @for (review of reviews; track review.id) {
+                        <div class="col-12">
+                            <div class="card border-0 bg-light rounded-4 p-4 shadow-sm h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                            <i class="bi bi-person-fill fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">User #{{ review.userId }} @if(currentUserId == review.userId) { <span class="badge bg-secondary ms-1">You</span> }</h6>
+                                            <div class="text-warning small mt-1">
+                                                @for (star of [1,2,3,4,5]; track star) {
+                                                    <i class="bi" [class]="star <= review.rating ? 'bi-star-fill' : 'bi-star'"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-end gap-2">
+                                        <span class="text-muted small">
+                                            {{ review.createdAt ? review.createdAt[0] + '-' + review.createdAt[1] + '-' + review.createdAt[2] : 'Just now' }}
+                                        </span>
+                                        @if (currentUserId == review.userId) {
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary rounded-circle border-0 bg-white shadow-sm" title="Edit" (click)="onEditReview(review)">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger rounded-circle border-0 bg-white shadow-sm" title="Delete" (click)="deleteReview(review.id)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <p class="mb-0 text-dark-emphasis">
+                                    "{{ review.comment }}"
+                                </p>
+                            </div>
+                        </div>
+                    } @empty {
+                        <div class="col-12 text-center py-5 border rounded-4 dashed-border">
+                            <i class="bi bi-chat-left-dots text-muted display-4 mb-3 d-block"></i>
+                            <h5 class="text-muted">No reviews yet</h5>
+                            <p class="text-muted small mb-0">Be the first to share your thoughts about this product.</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

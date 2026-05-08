@@ -1,0 +1,50 @@
+.product-image-container {
+    background-color: #fff;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image-container img {
+    max-height: 500px;
+    width: auto;
+    object-fit: contain;
+}
+
+.leading-relaxed {
+    line-height: 1.8;
+}
+
+.feature-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "•";
+    color: #dee2e6;
+}
+
+.btn-primary {
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.dashed-border {
+    border-style: dashed !important;
+    border-width: 2px !important;
+    background-color: #fafafa;
+}
+
+.user-avatar {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
