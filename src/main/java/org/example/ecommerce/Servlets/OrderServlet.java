@@ -6,6 +6,7 @@ import Application.DTOs.OrderSummaryDto;
 import Application.Services.AuthService;
 import Application.Services.OrderService;
 import Infrastructure.Repositories.*;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -101,7 +102,7 @@ public class OrderServlet extends HttpServlet {
 
         int orderId = Integer.parseInt(pathInfo.substring(1));
         
-        Map<String, Object> body = objectMapper.readValue(req.getReader(), Map.class);
+        Map<String, Object> body = objectMapper.readValue(req.getReader(), new TypeReference<Map<String, Object>>() {});
         if (!body.containsKey("status")) {
             responseHandler.send(resp, responseHandler.badRequest("Status is required"));
             return;

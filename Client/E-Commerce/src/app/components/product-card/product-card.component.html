@@ -1,17 +1,21 @@
 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden product-card">
     <div class="position-relative cursor-pointer" [routerLink]="['/product-details', product.id]">
         <img [src]="product.imageUrl" class="card-img-top product-image" [alt]="product.name">
-        <span class="badge bg-primary position-absolute top-0 end-0 m-3 rounded-pill px-3">
-            ${{ product.price }}
+        <span class="badge price-tag position-absolute top-0 end-0 m-3 rounded-3 px-3 py-2">
+            ${{ product.price | number:'1.2-2' }}
         </span>
     </div>
     <div class="card-body p-4">
-        <h5 class="card-title fw-bold text-truncate cursor-pointer" [routerLink]="['/product-details', product.id]">{{ product.name }}</h5>
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="text-secondary small">
-                <i class="bi bi-box me-1"></i> Stock: {{ product.stock }}
+        <h5 class="card-title fw-bold text-truncate cursor-pointer mb-0" [routerLink]="['/product-details', product.id]">
+            {{ product.name }}
+        </h5>
+        
+        <div class="d-flex justify-content-between align-items-center gap-3 mt-3">
+            <span class="stock-indicator small d-flex align-items-center" [class.stock-low]="product.stock < 10">
+                <i class="bi bi-box-seam me-2"></i> 
+                {{ product.stock }} in stock
             </span>
-            <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="addToCart()">
+            <button class="btn btn-outline-primary btn-sm rounded-3 px-3 py-2" (click)="addToCart()">
                 <i class="bi bi-cart-plus me-1"></i> Add
             </button>
         </div>

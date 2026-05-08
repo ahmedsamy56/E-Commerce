@@ -1,6 +1,7 @@
 package org.example.ecommerce.Servlets;
 
 import Application.DTOs.LoginDto;
+import Application.DTOs.AuthResponseDto;
 import Application.Services.AuthService;
 import Application.Services.UserService;
 import Core.Entities.User;
@@ -40,13 +41,13 @@ public class AuthServlet extends HttpServlet {
         if ("/register".equals(pathInfo)) {
             User user = objectMapper.readValue(req.getReader(), User.class);
             userService.createAccount(user);
-            
+
             user.setPassword(null);
             responseHandler.send(resp, responseHandler.created(user));
         } else if ("/login".equals(pathInfo)) {
             LoginDto loginDto = objectMapper.readValue(req.getReader(), LoginDto.class);
-            Application.DTOs.AuthResponseDto authResponse = authService.login(loginDto.getEmail(), loginDto.getPassword());
-            
+            AuthResponseDto authResponse = authService.login(loginDto.getEmail(), loginDto.getPassword());
+
             responseHandler.send(resp, responseHandler.success(authResponse));
         } else {
             responseHandler.send(resp, responseHandler.notFound("Endpoint not found"));
