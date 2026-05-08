@@ -11,6 +11,8 @@ import { AdminLayoutComponent } from './pages/admin/admin-layout/admin-layout.co
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { AdminProductsComponent } from './pages/admin/products/products.component';
 import { AdminCategoriesComponent } from './pages/admin/categories/categories.component';
+import { AdminOrdersComponent } from './pages/admin/orders/orders.component';
+import { AdminOrderDetailComponent } from './pages/admin/orders/order-detail/order-detail.component';
 import { authGuard } from './Core/guards/auth.guard';
 import { adminGuard } from './Core/guards/admin.guard';
 
@@ -33,7 +35,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'products', component: AdminProductsComponent },
       { path: 'categories', component: AdminCategoriesComponent },
-      { path: 'orders', component: AdminDashboardComponent }, // Placeholder
+      { path: 'orders', component: AdminOrdersComponent },
+      { path: 'orders/:id', component: AdminOrderDetailComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

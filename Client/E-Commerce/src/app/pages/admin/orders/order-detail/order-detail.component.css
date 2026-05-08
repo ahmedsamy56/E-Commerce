@@ -1,0 +1,17 @@
+.badge {
+    font-weight: 600;
+}
+
+.table th {
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.card {
+    transition: transform 0.2s ease;
+}
+
+.status-badge-container span {
+    display: block;
+    text-align: center;
+}

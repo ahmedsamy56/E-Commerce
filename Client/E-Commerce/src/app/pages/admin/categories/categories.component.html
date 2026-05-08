@@ -1,7 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="fw-bold mb-1">Categories Management</h2>
-        <p class="text-muted">Organize your products with categories.</p>
     </div>
     <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="openAddModal()">
         <i class="bi bi-plus-lg me-2"></i>
@@ -10,61 +9,58 @@
 </div>
 
 @if (isLoading) {
-    <div class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+<div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
+</div>
 } @else if (errorMessage) {
-    <div class="alert alert-danger border-0 shadow-sm rounded-4 p-4">
-        {{ errorMessage }}
-    </div>
+<div class="alert alert-danger border-0 shadow-sm rounded-4 p-4">
+    {{ errorMessage }}
+</div>
 } @else {
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-4" style="width: 100px;">ID</th>
-                        <th>Category Name</th>
-                        <th class="text-end pe-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (cat of categories; track cat.id) {
-                        <tr>
-                            <td class="ps-4 fw-bold text-muted">#{{ cat.id }}</td>
-                            <td>
-                                <span class="fw-bold fs-6">{{ cat.name }}</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group shadow-sm rounded-pill overflow-hidden">
-                                    <button class="btn btn-white btn-sm px-3" title="Edit" (click)="openEditModal(cat)">
-                                        <i class="bi bi-pencil-square text-primary"></i>
-                                    </button>
-                                    <button class="btn btn-white btn-sm px-3" title="Delete" (click)="deleteCategory(cat.id)">
-                                        <i class="bi bi-trash3 text-danger"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="3" class="text-center py-5 text-muted">
-                                No categories found.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4" style="width: 100px;">ID</th>
+                    <th>Category Name</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (cat of categories; track cat.id) {
+                <tr>
+                    <td class="ps-4 fw-bold text-muted">#{{ cat.id }}</td>
+                    <td>
+                        <span class="fw-bold fs-6">{{ cat.name }}</span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="btn-group shadow-sm rounded-pill overflow-hidden">
+                            <button class="btn btn-white btn-sm px-3" title="Edit" (click)="openEditModal(cat)">
+                                <i class="bi bi-pencil-square text-primary"></i>
+                            </button>
+                            <button class="btn btn-white btn-sm px-3" title="Delete" (click)="deleteCategory(cat.id)">
+                                <i class="bi bi-trash3 text-danger"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="3" class="text-center py-5 text-muted">
+                        No categories found.
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
     </div>
+</div>
 }
 
 @if (showModal) {
-    <app-category-form
-        [category]="editingCategory"
-        (save)="handleSave($event)"
-        (cancel)="showModal = false">
-    </app-category-form>
+<app-category-form [category]="editingCategory" (save)="handleSave($event)" (cancel)="showModal = false">
+</app-category-form>
 }

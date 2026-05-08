@@ -20,9 +20,17 @@ export class OrderService {
 
   getMyOrders(): Observable<ApiResponse<Order[]>> {
     return this.http.get<ApiResponse<Order[]>>(`${this.apiUrl}/orders/my`);
-  }
+  } 
 
   getOrderById(id: number): Observable<ApiResponse<OrderDetail>> {
     return this.http.get<ApiResponse<OrderDetail>>(`${this.apiUrl}/orders/${id}`);
+  }
+
+  getAllOrders(): Observable<ApiResponse<Order[]>> {
+    return this.http.get<ApiResponse<Order[]>>(`${this.apiUrl}/orders/`);
+  }
+
+  updateOrderStatus(id: number, status: number): Observable<ApiResponse<string>> {
+    return this.http.put<ApiResponse<string>>(`${this.apiUrl}/orders/${id}`, { status });
   }
 }

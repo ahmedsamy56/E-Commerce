@@ -1,0 +1,17 @@
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.02);
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1050;
+}
+
+.modal {
+    z-index: 1060;
+}
+
+.badge {
+    font-weight: 600;
+}

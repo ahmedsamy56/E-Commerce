@@ -1,0 +1,61 @@
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Orders Management</h2>
+</div>
+
+@if (isLoading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+} @else if (errorMessage) {
+    <div class="alert alert-danger border-0 shadow-sm rounded-4 p-4">
+        {{ errorMessage }}
+    </div>
+} @else {
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (order of orders; track order.id) {
+                        <tr>
+                            <td class="ps-4 fw-bold">#{{ order.id }}</td>
+                            <td>{{ order.user_name }}</td>
+                            <td>
+                                {{ order.date[0] }}-{{ order.date[1] | number:'2.0' }}-{{ order.date[2] | number:'2.0' }}
+                                <small class="text-muted d-block">{{ order.date[3] }}:{{ order.date[4] | number:'2.0' }}</small>
+                            </td>
+                            <td class="fw-bold text-primary">${{ order.total_price | number:'1.2-2' }}</td>
+                            <td>
+                                <span class="badge rounded-pill px-3" [ngClass]="getStatusBadgeClass(order.status)">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <a [routerLink]="['/admin/orders', order.id]" class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                                    <i class="bi bi-eye me-1"></i> View Details
+                                </a>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                No orders found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

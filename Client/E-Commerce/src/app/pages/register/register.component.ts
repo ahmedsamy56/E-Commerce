@@ -43,7 +43,6 @@ export class RegisterComponent {
         this.isLoading = false;
         if (response.succeeded) {
           this.successMessage = 'Account created successfully! Redirecting to login...';
-          setTimeout(() => this.router.navigate(['/login']), 2000);
         } else {
           this.errorMessage = response.message || 'Registration failed.';
         }
