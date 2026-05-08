@@ -6,9 +6,12 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/ECommerceDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-    private static final String USER = "root"; 
-    private static final String PASSWORD = "";
+    private static final String URL = System.getenv().getOrDefault(
+        "DB_URL",
+        "jdbc:mysql://localhost:3306/ECommerceDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    );
+    private static final String USER = System.getenv().getOrDefault("DB_USER", "root");
+    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "");
 
     private static Connection connection;
 
