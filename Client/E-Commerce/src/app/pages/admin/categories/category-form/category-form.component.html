@@ -1,0 +1,27 @@
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 p-4 pb-2">
+                <h5 class="modal-title fw-bold fs-4">
+                    {{ category ? 'Update Category' : 'Add New Category' }}
+                </h5>
+                <button type="button" class="btn-close" (click)="cancel.emit()"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" id="categoryForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-uppercase">Category Name</label>
+                        <input type="text" formControlName="name" class="form-control rounded-3 py-2" placeholder="e.g. Electronics, Fashion...">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 p-4 pt-0">
+                <button type="button" class="btn btn-light rounded-pill px-4" (click)="cancel.emit()">Cancel</button>
+                <button type="submit" form="categoryForm" class="btn btn-primary rounded-pill px-4 shadow-sm" [disabled]="categoryForm.invalid">
+                    {{ category ? 'Save Changes' : 'Create Category' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

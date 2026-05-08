@@ -10,6 +10,7 @@ import { OrderDetailsComponent } from './pages/order-details/order-details.compo
 import { AdminLayoutComponent } from './pages/admin/admin-layout/admin-layout.component';
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { AdminProductsComponent } from './pages/admin/products/products.component';
+import { AdminCategoriesComponent } from './pages/admin/categories/categories.component';
 import { authGuard } from './Core/guards/auth.guard';
 import { adminGuard } from './Core/guards/admin.guard';
 
@@ -31,7 +32,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'products', component: AdminProductsComponent },
-      { path: 'categories', component: AdminDashboardComponent }, // Placeholder
+      { path: 'categories', component: AdminCategoriesComponent },
       { path: 'orders', component: AdminDashboardComponent }, // Placeholder
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

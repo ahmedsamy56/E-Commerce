@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.succeeded) {
-          this.products = response.data;
+          this.products = response.data.filter(p => p.isActive);
         } else {
           this.errorMessage = response.message || 'Failed to load products.';
         }

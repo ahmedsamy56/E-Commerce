@@ -34,7 +34,7 @@ export class AdminDashboardComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         console.error(err);
-        this.errorMessage = 'An error occurred while fetching dashboard statistics.';
+        this.errorMessage = err.error?.message || 'An error occurred while fetching dashboard statistics.';
       }
     });
   }
