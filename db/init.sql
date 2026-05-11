@@ -70,3 +70,6 @@ CREATE TABLE IF NOT EXISTS shipments (
     zip_code VARCHAR(20),
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
+
+INSERT INTO `users` (`name`, `email`, `phone`, `password`, `created_at`, `role`) VALUES
+('Ahmed Samy', 'admin@example.com', '01234567890', '$2a$10$BSm1Xksgs1EJ2ui2xa6hAub3pJWwbiG7OsoPP85fY0Ly4C85o8E.a', now(), 1);
