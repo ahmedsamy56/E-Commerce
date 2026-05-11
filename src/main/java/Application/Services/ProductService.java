@@ -4,6 +4,7 @@ import Application.Validators.ProductValidator;
 import Core.Entities.Product;
 import Core.Interfaces.Repositories.IProductRepository;
 import Core.Interfaces.Services.IProductService;
+import Core.Interfaces.Services.ICacheService;
 import tr.kontas.fluentvalidation.validation.ValidationResult;
 
 import java.util.List;
@@ -12,10 +13,12 @@ public class ProductService implements IProductService {
 
     private final IProductRepository productRepository;
     private final ProductValidator productValidator;
+    private final ICacheService cacheService;
 
-    public ProductService(IProductRepository productRepository) {
+    public ProductService(IProductRepository productRepository, ICacheService cacheService) {
         this.productRepository = productRepository;
         this.productValidator = new ProductValidator();
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -25,12 +28,24 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getAll() {
-        return productRepository.findAll();
+        String key = "products:all";
+        List<Product> products = cacheService.get(key, List.class);
+        if (products != null) return products;
+
+        products = productRepository.findAll();
+        cacheService.set(key, products, 10);
+        return products;
     }
 
     @Override
     public List<Product> getByCategoryId(int categoryId) {
-        return productRepository.findByCategoryId(categoryId);
+        String key = "products:category:" + categoryId;
+        List<Product> products = cacheService.get(key, List.class);
+        if (products != null) return products;
+
+        products = productRepository.findByCategoryId(categoryId);
+        cacheService.set(key, products, 10);
+        return products;
     }
 
     @Override
@@ -40,6 +55,7 @@ public class ProductService implements IProductService {
             throw new IllegalArgumentException(result.getErrors().get(0).message());
         }
         productRepository.Add(product);
+        clearCache();
     }
 
     @Override
@@ -49,10 +65,17 @@ public class ProductService implements IProductService {
             throw new IllegalArgumentException(result.getErrors().get(0).message());
         }
         productRepository.update(product);
+        clearCache();
     }
 
     @Override
     public void delete(int id) {
         productRepository.delete(id);
+        clearCache();
+    }
+
+    private void clearCache() {
+        cacheService.delete("products:all");
+        cacheService.deleteByPrefix("products:category:");
     }
 }

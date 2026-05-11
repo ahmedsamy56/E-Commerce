@@ -4,6 +4,7 @@ import Application.Validators.CategoryValidator;
 import Core.Entities.Category;
 import Core.Interfaces.Repositories.ICategoryRepository;
 import Core.Interfaces.Services.ICategoryService;
+import Core.Interfaces.Services.ICacheService;
 import tr.kontas.fluentvalidation.validation.ValidationResult;
 
 import java.util.List;
@@ -12,10 +13,12 @@ public class CategoryService implements ICategoryService {
 
     private final ICategoryRepository categoryRepository;
     private final CategoryValidator categoryValidator;
+    private final ICacheService cacheService;
 
-    public CategoryService(ICategoryRepository categoryRepository) {
+    public CategoryService(ICategoryRepository categoryRepository, ICacheService cacheService) {
         this.categoryRepository = categoryRepository;
         this.categoryValidator = new CategoryValidator();
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -25,7 +28,13 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public List<Category> getAll() {
-        return categoryRepository.findAll();
+        String key = "categories:all";
+        List<Category> categories = cacheService.get(key, List.class);
+        if (categories != null) return categories;
+
+        categories = categoryRepository.findAll();
+        cacheService.set(key, categories, 30);
+        return categories;
     }
 
     @Override
@@ -35,6 +44,7 @@ public class CategoryService implements ICategoryService {
             throw new IllegalArgumentException(result.getErrors().get(0).message());
         }
         categoryRepository.Add(category);
+        cacheService.delete("categories:all");
     }
 
     @Override
@@ -44,10 +54,12 @@ public class CategoryService implements ICategoryService {
             throw new IllegalArgumentException(result.getErrors().get(0).message());
         }
         categoryRepository.update(category);
+        cacheService.delete("categories:all");
     }
 
     @Override
     public void delete(int id) {
         categoryRepository.delete(id);
+        cacheService.delete("categories:all");
     }
 }

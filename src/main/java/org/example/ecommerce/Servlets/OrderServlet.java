@@ -5,6 +5,7 @@ import Application.DTOs.OrderDetailDto;
 import Application.DTOs.OrderSummaryDto;
 import Application.Services.AuthService;
 import Application.Services.OrderService;
+import Infrastructure.Caching.RedisService;
 import Infrastructure.Repositories.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,8 @@ public class OrderServlet extends HttpServlet {
                 new OrderRepository(),
                 new OrderItemRepository(),
                 new ShipmentRepository(),
-                new ProductRepository()
+                new ProductRepository(),
+                RedisService.getInstance()
         );
         authService = new AuthService(new UserRepository());
         objectMapper = new ObjectMapper();

@@ -3,6 +3,7 @@ package org.example.ecommerce.Servlets;
 import Application.Services.AuthService;
 import Application.Services.CategoryService;
 import Core.Entities.Category;
+import Infrastructure.Caching.RedisService;
 import Infrastructure.Repositories.CategoryRepository;
 import Infrastructure.Repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +27,7 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        categoryService = new CategoryService(new CategoryRepository());
+        categoryService = new CategoryService(new CategoryRepository(), RedisService.getInstance());
         authService = new AuthService(new UserRepository());
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());

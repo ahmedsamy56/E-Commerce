@@ -15,6 +15,7 @@ import Core.Interfaces.Repositories.IOrderItemRepository;
 import Core.Interfaces.Repositories.IOrderRepository;
 import Core.Interfaces.Repositories.IProductRepository;
 import Core.Interfaces.Repositories.IShipmentRepository;
+import Core.Interfaces.Services.ICacheService;
 import Core.Interfaces.Services.IOrderService;
 
 import java.math.BigDecimal;
@@ -28,13 +29,16 @@ public class OrderService implements IOrderService {
     private final IOrderItemRepository orderItemRepository;
     private final IShipmentRepository shipmentRepository;
     private final IProductRepository productRepository;
+    private final ICacheService cacheService;
 
     public OrderService(IOrderRepository orderRepository, IOrderItemRepository orderItemRepository,
-                        IShipmentRepository shipmentRepository, IProductRepository productRepository) {
+                        IShipmentRepository shipmentRepository, IProductRepository productRepository,
+                        ICacheService cacheService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.shipmentRepository = shipmentRepository;
         this.productRepository = productRepository;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -96,11 +100,20 @@ public class OrderService implements IOrderService {
         shipment.setCountry(shippingDto.getCountry());
         shipment.setZipCode(shippingDto.getZipCode());
         shipmentRepository.Add(shipment);
+
+        // Invalidate orders cache
+        cacheService.deleteByPrefix("orders:all:");
     }
 
     @Override
     public List<OrderSummaryDto> getAllOrders(Integer statusOrdinal) {
-        return orderRepository.findAllWithUser(statusOrdinal);
+        String key = "orders:all:" + (statusOrdinal == null ? "all" : statusOrdinal);
+        List<OrderSummaryDto> orders = cacheService.get(key, List.class);
+        if (orders != null) return orders;
+
+        orders = orderRepository.findAllWithUser(statusOrdinal);
+        cacheService.set(key, orders, 5);
+        return orders;
     }
 
     @Override
@@ -152,5 +165,8 @@ public class OrderService implements IOrderService {
         }
         OrderStatus status = OrderStatus.values()[statusOrdinal];
         orderRepository.updateStatus(orderId, status);
+        
+        // Invalidate orders cache
+        cacheService.deleteByPrefix("orders:all:");
     }
 }
