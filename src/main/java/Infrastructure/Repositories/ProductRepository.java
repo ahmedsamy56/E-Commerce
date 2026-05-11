@@ -82,7 +82,6 @@ public class ProductRepository extends BaseRepository implements IProductReposit
             stmt.setObject(8, product.getCategoryId());
             stmt.executeUpdate();
 
-            // استرجاع الـ ID المُولد تلقائياً من قاعدة البيانات
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 product.setId(rs.getInt(1));

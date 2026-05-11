@@ -39,7 +39,7 @@ public class OrderItemRepository extends BaseRepository implements IOrderItemRep
 
     @Override
     public List<OrderItem> findAll() {
-        return new ArrayList<>(); // Stub
+        return new ArrayList<>();
     }
 
     @Override

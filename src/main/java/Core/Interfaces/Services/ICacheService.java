@@ -5,4 +5,5 @@ public interface ICacheService {
     <T> void set(String key, T value, long expirationMinutes);
     void delete(String key);
     void deleteByPrefix(String prefix);
+    boolean isAllowed(String key, int limit, int seconds);
 }

@@ -1,6 +1,7 @@
 package org.example.Filters;
 
 import Core.Utils.JwtUtil;
+import Infrastructure.Caching.RedisService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,36 +29,43 @@ public class AuthFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        setCorsHeaders(res);
 
+        // 1. CORS Headers
+        setCorsHeaders(res);
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
             res.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
+        // 2. Rate Limiting
+        String clientIp = req.getRemoteAddr();
+        String rateLimitKey = "ratelimit:" + clientIp;
+        if (!RedisService.getInstance().isAllowed(rateLimitKey, 10, 60)) {
+            System.out.println("[RATE LIMIT] Blocked IP: " + clientIp);
+            responseHandler.send(res, responseHandler.badRequest("Too Many Requests. Please try again later."));
+            return;
+        }
+
+        // 3. Authentication
         String path = req.getRequestURI();
 
-        // Skip auth endpoints
         if (path.contains("/api/auth/login") || path.contains("/api/auth/register")) {
             chain.doFilter(request, response);
             return;
         }
 
         String authHeader = req.getHeader("Authorization");
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             responseHandler.send(res, responseHandler.unauthorized("Missing or invalid Authorization header"));
             return;
         }
 
         String token = authHeader.substring(7);
-
         if (!jwtUtil.validateToken(token)) {
             responseHandler.send(res, responseHandler.unauthorized("Invalid or expired token"));
             return;
         }
 
-        // Token is valid, set in request attribute for AuthService
         req.setAttribute("token", token);
         chain.doFilter(request, response);
     }

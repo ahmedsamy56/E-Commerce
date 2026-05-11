@@ -90,4 +90,17 @@ public class RedisService implements ICacheService {
             System.out.println("Error deleting by prefix: " + e.getMessage());
         }
     }
+    @Override
+    public boolean isAllowed(String key, int limit, int seconds) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            long count = jedis.incr(key);
+            if (count == 1) {
+                jedis.expire(key, seconds);
+            }
+            return count <= limit;
+        } catch (Exception e) {
+            System.out.println("Error in rate limiting: " + e.getMessage());
+            return true; // Default to allow if Redis is down
+        }
+    }
 }
