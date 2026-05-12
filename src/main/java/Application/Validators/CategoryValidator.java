@@ -6,7 +6,9 @@ import tr.kontas.fluentvalidation.validation.Validator;
 public class CategoryValidator extends Validator<Category> {
     public CategoryValidator() {
         ruleFor(Category::getName)
-            .notNull().withMessage("Category name is required.")
-            .notEmpty().withMessage("Category name cannot be empty.");
+                .notNull().withMessage("Category name is required.")
+                .notEmpty().withMessage("Category name cannot be empty.")
+                .must(name -> !name.trim().isEmpty(),
+                        "Category name cannot contain only spaces.");
     }
 }

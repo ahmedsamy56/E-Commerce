@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.Response.ResponseHandler;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ReviewServlet extends HttpServlet {
         reviewService = new ReviewService(new ReviewRepository());
         authService = new AuthService(new UserRepository());
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        objectMapper.registerModule(new JavaTimeModule());
         responseHandler = new ResponseHandler();
     }
 

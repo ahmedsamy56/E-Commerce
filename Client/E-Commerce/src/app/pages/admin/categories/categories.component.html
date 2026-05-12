@@ -61,6 +61,6 @@
 }
 
 @if (showModal) {
-<app-category-form [category]="editingCategory" (save)="handleSave($event)" (cancel)="showModal = false">
+<app-category-form [category]="editingCategory" [serverError]="formError" (save)="handleSave($event)" (cancel)="showModal = false">
 </app-category-form>
 }

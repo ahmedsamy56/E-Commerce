@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.Response.ResponseHandler;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 
@@ -30,7 +31,7 @@ public class AuthServlet extends HttpServlet {
         userService = new UserService(userRepository);
         authService = new AuthService(userRepository);
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        objectMapper.registerModule(new JavaTimeModule());
         responseHandler = new ResponseHandler();
     }
 

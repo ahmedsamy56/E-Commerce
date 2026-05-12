@@ -19,6 +19,7 @@ export class AdminCategoriesComponent implements OnInit {
   // Modal control
   showModal: boolean = false;
   editingCategory: Category | null = null;
+  formError: string | null = null;
 
   constructor(private categoryService: CategoryService) {}
 
@@ -47,24 +48,32 @@ export class AdminCategoriesComponent implements OnInit {
 
   openAddModal() {
     this.editingCategory = null;
+    this.formError = null;
     this.showModal = true;
   }
 
   openEditModal(category: Category) {
     this.editingCategory = category;
+    this.formError = null;
     this.showModal = true;
   }
 
   handleSave(categoryData: any) {
+    this.formError = null;
     if (this.editingCategory) {
       this.categoryService.updateCategory(this.editingCategory.id, categoryData).subscribe({
         next: (response) => {
           if (response.succeeded) {
             this.showModal = false;
             this.fetchCategories();
+          } else {
+            this.formError = response.message || 'Failed to update category.';
           }
         },
-        error: (err) => console.error('Update failed', err)
+        error: (err) => {
+          console.error('Update failed', err);
+          this.formError = err.error?.message || 'An error occurred during update.';
+        }
       });
     } else {
       this.categoryService.addCategory(categoryData).subscribe({
@@ -72,9 +81,14 @@ export class AdminCategoriesComponent implements OnInit {
           if (response.succeeded) {
             this.showModal = false;
             this.fetchCategories();
+          } else {
+            this.formError = response.message || 'Failed to create category.';
           }
         },
-        error: (err) => console.error('Add failed', err)
+        error: (err) => {
+          console.error('Add failed', err);
+          this.formError = err.error?.message || 'An error occurred during creation.';
+        }
       });
     }
   }

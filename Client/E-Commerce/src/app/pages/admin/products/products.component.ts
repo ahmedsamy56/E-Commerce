@@ -24,6 +24,7 @@ export class AdminProductsComponent implements OnInit {
   // Modal control
   showModal: boolean = false;
   editingProduct: Product | null = null;
+  formError: string | null = null;
 
   constructor(
     private productService: ProductService,
@@ -71,24 +72,32 @@ export class AdminProductsComponent implements OnInit {
 
   openAddModal() {
     this.editingProduct = null;
+    this.formError = null;
     this.showModal = true;
   }
 
   openEditModal(product: Product) {
     this.editingProduct = product;
+    this.formError = null;
     this.showModal = true;
   }
 
   handleSave(productData: any) {
+    this.formError = null;
     if (this.editingProduct) {
       this.productService.updateProduct(this.editingProduct.id, productData).subscribe({
         next: (response) => {
           if (response.succeeded) {
             this.showModal = false;
             this.fetchProducts();
+          } else {
+            this.formError = response.message || 'Failed to update product.';
           }
         },
-        error: (err) => console.error('Update failed', err)
+        error: (err) => {
+          console.error('Update failed', err);
+          this.formError = err.error?.message || 'An error occurred during update.';
+        }
       });
     } else {
       this.productService.addProduct(productData).subscribe({
@@ -96,9 +105,14 @@ export class AdminProductsComponent implements OnInit {
           if (response.succeeded) {
             this.showModal = false;
             this.fetchProducts();
+          } else {
+            this.formError = response.message || 'Failed to create product.';
           }
         },
-        error: (err) => console.error('Add failed', err)
+        error: (err) => {
+          console.error('Add failed', err);
+          this.formError = err.error?.message || 'An error occurred during creation.';
+        }
       });
     }
   }

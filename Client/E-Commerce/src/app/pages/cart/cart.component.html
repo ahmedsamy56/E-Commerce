@@ -94,33 +94,59 @@
                             <h5 class="fw-bold mb-0">Shipping Details</h5>
                         </div>
                         
-                        <form (ngSubmit)="placeOrder()">
+                        <form #shippingForm="ngForm" (ngSubmit)="placeOrder()">
                             <div class="mb-3">
                                 <label class="form-label small fw-bold">Address</label>
-                                <input type="text" class="form-control rounded-3" name="address" [(ngModel)]="shippingInfo.address" required>
+                                <input type="text" class="form-control rounded-3" 
+                                       name="address" [(ngModel)]="shippingInfo.address" 
+                                       #address="ngModel"
+                                       [class.is-invalid]="address.invalid && address.touched"
+                                       required pattern=".*\S.*">
+                                <div class="invalid-feedback small">Address is required and cannot be just spaces.</div>
                             </div>
                             <div class="row">
                                 <div class="col-6 mb-3">
                                     <label class="form-label small fw-bold">City</label>
-                                    <input type="text" class="form-control rounded-3" name="city" [(ngModel)]="shippingInfo.city" required>
+                                    <input type="text" class="form-control rounded-3" 
+                                           name="city" [(ngModel)]="shippingInfo.city" 
+                                           #city="ngModel"
+                                           [class.is-invalid]="city.invalid && city.touched"
+                                           required pattern=".*\S.*">
+                                    <div class="invalid-feedback small">City is required.</div>
                                 </div>
                                 <div class="col-6 mb-3">
                                     <label class="form-label small fw-bold">State</label>
-                                    <input type="text" class="form-control rounded-3" name="state" [(ngModel)]="shippingInfo.state" required>
+                                    <input type="text" class="form-control rounded-3" 
+                                           name="state" [(ngModel)]="shippingInfo.state" 
+                                           #state="ngModel"
+                                           [class.is-invalid]="state.invalid && state.touched"
+                                           required pattern=".*\S.*">
+                                    <div class="invalid-feedback small">State is required.</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6 mb-3">
                                     <label class="form-label small fw-bold">Zip Code</label>
-                                    <input type="text" class="form-control rounded-3" name="zip_code" [(ngModel)]="shippingInfo.zip_code" required>
+                                    <input type="text" class="form-control rounded-3" 
+                                           name="zip_code" [(ngModel)]="shippingInfo.zip_code" 
+                                           #zipCode="ngModel"
+                                           [class.is-invalid]="zipCode.invalid && zipCode.touched"
+                                           required pattern=".*\S.*">
+                                    <div class="invalid-feedback small">Zip code is required.</div>
                                 </div>
                                 <div class="col-6 mb-4">
                                     <label class="form-label small fw-bold">Country</label>
-                                    <input type="text" class="form-control rounded-3" name="country" [(ngModel)]="shippingInfo.country" readonly>
+                                    <input type="text" class="form-control rounded-3" 
+                                           name="country" [(ngModel)]="shippingInfo.country" 
+                                           #country="ngModel"
+                                           [class.is-invalid]="country.invalid && country.touched"
+                                           required pattern=".*\S.*">
+                                    <div class="invalid-feedback small">Country is required.</div>
                                 </div>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold" [disabled]="isProcessing">
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold" 
+                                    [disabled]="isProcessing || shippingForm.invalid">
                                 @if (isProcessing) {
                                     <span class="spinner-border spinner-border-sm me-2"></span>
                                 }

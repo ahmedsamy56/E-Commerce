@@ -42,7 +42,7 @@ export class RegisterComponent {
       next: (response) => {
         this.isLoading = false;
         if (response.succeeded) {
-          this.successMessage = 'Account created successfully! Redirecting to login...';
+          this.successMessage = 'Account created successfully!';
         } else {
           this.errorMessage = response.message || 'Registration failed.';
         }

@@ -111,6 +111,7 @@
     <app-product-form 
         [product]="editingProduct" 
         [categories]="categories"
+        [serverError]="formError"
         (save)="handleSave($event)"
         (cancel)="showModal = false">
     </app-product-form>

@@ -14,6 +14,7 @@ import { Product } from '../../../../models/product.model';
 export class ProductFormComponent implements OnInit {
   @Input() product: Product | null = null;
   @Input() categories: Category[] = [];
+  @Input() serverError: string | null = null;
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -28,6 +29,13 @@ export class ProductFormComponent implements OnInit {
       imageUrl: ['', Validators.required],
       isActive: [true],
       categoryId: [null, Validators.required]
+    });
+
+    // Clear server error when user starts typing
+    this.productForm.valueChanges.subscribe(() => {
+      if (this.serverError) {
+        this.serverError = null;
+      }
     });
   }
 

@@ -6,6 +6,7 @@ import Core.Interfaces.Repositories.IUserRepository;
 import Core.Interfaces.Services.IAuthService;
 import Core.Utils.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class AuthService implements IAuthService {
 
@@ -30,11 +31,12 @@ public class AuthService implements IAuthService {
         }
 
         String token = jwtUtil.generateToken(user);
-        return new AuthResponseDto(user.getId(), token, user.getName(), user.getEmail(), user.getPhone(), user.getRole().ordinal());
+        return new AuthResponseDto(user.getId(), token, user.getName(), user.getEmail(), user.getPhone(),
+                user.getRole().ordinal());
     }
 
     @Override
-    public Integer getCurrentUserId(jakarta.servlet.http.HttpServletRequest request) {
+    public Integer getCurrentUserId(HttpServletRequest request) {
         String token = (String) request.getAttribute("token");
         if (token != null) {
             return jwtUtil.extractIdFromToken(token);
@@ -43,7 +45,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public String getCurrentUserEmail(jakarta.servlet.http.HttpServletRequest request) {
+    public String getCurrentUserEmail(HttpServletRequest request) {
         String token = (String) request.getAttribute("token");
         if (token != null) {
             return jwtUtil.extractEmailFromToken(token);
@@ -52,7 +54,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public boolean isAdmin(jakarta.servlet.http.HttpServletRequest request) {
+    public boolean isAdmin(HttpServletRequest request) {
         String token = (String) request.getAttribute("token");
         if (token != null) {
             String role = jwtUtil.extractRoleFromToken(token);

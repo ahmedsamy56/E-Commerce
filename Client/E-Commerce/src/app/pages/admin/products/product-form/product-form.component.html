@@ -9,32 +9,54 @@
                 <button type="button" class="btn-close" (click)="cancel.emit()"></button>
             </div>
             <div class="modal-body p-4">
+                <div *ngIf="serverError" class="alert alert-danger rounded-3 py-2 px-3 mb-3 small border-0 shadow-sm">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    {{ serverError }}
+                </div>
+
                 <form [formGroup]="productForm" (ngSubmit)="onSubmit()" id="productForm">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">Product Name</label>
-                            <input type="text" formControlName="name" class="form-control rounded-3" placeholder="e.g. Premium Wireless Headphones">
+                            <input type="text" formControlName="name" 
+                                   class="form-control rounded-3" 
+                                   [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+                                   placeholder="e.g. Premium Wireless Headphones">
+                            <div class="invalid-feedback small">Name is required.</div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">Category</label>
-                            <select formControlName="categoryId" class="form-select rounded-3">
+                            <select formControlName="categoryId" 
+                                    class="form-select rounded-3"
+                                    [class.is-invalid]="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
                                 <option [ngValue]="null">Select Category</option>
                                 @for (cat of categories; track cat.id) {
                                     <option [ngValue]="cat.id">{{ cat.name }}</option>
                                 }
                             </select>
+                            <div class="invalid-feedback small">Please select a category.</div>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-bold small text-uppercase">Description</label>
-                            <textarea formControlName="description" class="form-control rounded-3" rows="3" placeholder="Detailed product description..."></textarea>
+                            <textarea formControlName="description" 
+                                      class="form-control rounded-3" rows="3" 
+                                      [class.is-invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+                                      placeholder="Detailed product description..."></textarea>
+                            <div class="invalid-feedback small">Description is required.</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold small text-uppercase">Price ($)</label>
-                            <input type="number" formControlName="price" class="form-control rounded-3" step="0.01">
+                            <input type="number" formControlName="price" 
+                                   class="form-control rounded-3" step="0.01"
+                                   [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+                            <div class="invalid-feedback small">Price must be greater than 0.</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold small text-uppercase">Stock Quantity</label>
-                            <input type="number" formControlName="stock" class="form-control rounded-3">
+                            <input type="number" formControlName="stock" 
+                                   class="form-control rounded-3"
+                                   [class.is-invalid]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+                            <div class="invalid-feedback small">Stock cannot be negative.</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold small text-uppercase">Status</label>
@@ -45,7 +67,11 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-bold small text-uppercase">Image URL</label>
-                            <input type="text" formControlName="imageUrl" class="form-control rounded-3" placeholder="https://example.com/image.jpg">
+                            <input type="text" formControlName="imageUrl" 
+                                   class="form-control rounded-3" 
+                                   [class.is-invalid]="productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched"
+                                   placeholder="https://example.com/image.jpg">
+                            <div class="invalid-feedback small">Image URL is required.</div>
                             @if (productForm.get('imageUrl')?.value) {
                                 <div class="mt-3 text-center">
                                     <img [src]="productForm.get('imageUrl')?.value" 

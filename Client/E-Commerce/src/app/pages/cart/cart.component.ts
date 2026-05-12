@@ -56,13 +56,30 @@ export class CartComponent implements OnInit {
   placeOrder() {
     if (this.cartItems.length === 0) return;
 
+    // Extra validation to ensure no fields are just whitespace
+    if (!this.shippingInfo.address.trim() || 
+        !this.shippingInfo.city.trim() || 
+        !this.shippingInfo.state.trim() || 
+        !this.shippingInfo.zip_code.trim() ||
+        !this.shippingInfo.country.trim()) {
+      alert('Please fill in all shipping details correctly.');
+      return;
+    }
+
     this.isProcessing = true;
     const order: OrderRequest = {
       items: this.cartItems.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity
       })),
-      shipping: this.shippingInfo
+      shipping: {
+        ...this.shippingInfo,
+        address: this.shippingInfo.address.trim(),
+        city: this.shippingInfo.city.trim(),
+        state: this.shippingInfo.state.trim(),
+        zip_code: this.shippingInfo.zip_code.trim(),
+        country: this.shippingInfo.country.trim()
+      }
     };
 
     this.orderService.placeOrder(order).subscribe({

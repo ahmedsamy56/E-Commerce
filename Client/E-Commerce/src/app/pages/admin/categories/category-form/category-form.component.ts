@@ -12,6 +12,7 @@ import { Category } from '../../../../models/category.model';
 })
 export class CategoryFormComponent implements OnInit {
   @Input() category: Category | null = null;
+  @Input() serverError: string | null = null;
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -20,6 +21,12 @@ export class CategoryFormComponent implements OnInit {
   constructor(private fb: FormBuilder) {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required]
+    });
+
+    this.categoryForm.get('name')?.valueChanges.subscribe(() => {
+      if (this.serverError) {
+        this.serverError = null;
+      }
     });
   }
 

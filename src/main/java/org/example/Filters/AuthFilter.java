@@ -40,7 +40,7 @@ public class AuthFilter implements Filter {
         // 2. Rate Limiting
         String clientIp = req.getRemoteAddr();
         String rateLimitKey = "ratelimit:" + clientIp;
-        if (!RedisService.getInstance().isAllowed(rateLimitKey, 10, 60)) {
+        if (!RedisService.getInstance().isAllowed(rateLimitKey, 60, 60)) {
             System.out.println("[RATE LIMIT] Blocked IP: " + clientIp);
             responseHandler.send(res, responseHandler.badRequest("Too Many Requests. Please try again later."));
             return;
